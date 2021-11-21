@@ -1,0 +1,16 @@
+---
+- name: "Setup memcached"
+  hosts: memcached
+  vars:
+    - memcached_port: 11211
+    - memcached_user: "memcached"
+    - memcached_maxconn: 8192
+    - memcached_cachesize: 90188
+    - memcached_listen: "0.0.0.0"
+    - memcached_udpport: 0
+    - memcached_threads: 8
+    - memcached_loglevel: "-vv"
+  tasks:
+  - name: "Setup memecahed"
+    include_role:
+      name: miracle-ansible-role-memcached

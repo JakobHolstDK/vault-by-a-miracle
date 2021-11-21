@@ -1,0 +1,5 @@
+---
+roles:
+  - src: git@github.com:JakobHolstDK/miracle-ansible-role-memcached.git
+    scm: git
+    version: "master"

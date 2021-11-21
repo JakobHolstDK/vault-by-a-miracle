@@ -1,0 +1,18 @@
+#!/usr/bin/env python3
+
+from pymemcache.client import base
+
+{{ testservera }}_client = base.Client(('{{ testservera }}', 11211))
+{{ testserverb }}_client = base.Client(('{{ testserverb }}', 11211))
+{{ testserverc }}_client = base.Client(('{{ testserverc }}', 11211))
+
+{{ inventory_hostname }}_client.set('ansible_hostname', '{{ inventory_hostname }}')
+
+value_a = dba_client.get('ansible_hostname')
+value_b = dbb_client.get('ansible_hostname')
+value_c = dbc_client.get('ansible_hostname')
+
+print("dba: %s " % value_a)
+print("dbb: %s " % value_b)
+print("dbc: %s " % value_c)
+

@@ -1,0 +1,69 @@
+####################################################
+# What to be done om redhat only
+####################################################
+
+- name: ansible_role_build_ostack_components | Put SELinux in permissive mode, logging actions that would be blocked.
+  ansible.posix.selinux:
+    policy: targeted
+    state: permissive
+  become: True
+
+- name: Enable codeready-builder repository
+  shell: subscription-manager repos --enable codeready-builder-for-rhel-8-x86_64-rpms
+  become: True
+
+- name: build_virtual_environments | Install tools on build servers
+  ansible.builtin.package:
+    name:  '{{ item  }}'
+    state: present
+  with_items:
+    - "git"
+    - "python3-pip"
+    - "python3-devel"
+    - "make" 
+    - "autoconf" 
+    - "automake" 
+    - "libtool" 
+    - "gcc"
+    - "zlib-devel"
+    - "rpm-build"
+    - "tree"
+    - "python3-virtualenv"
+    - "help2man"
+    - "scl-utils-build"
+    - "scl-utils"
+    - "libffi-devel"
+    - "createrepo"
+  become: True
+
+
+      #    - "liberasurecode-devel"
+- name: create dir
+  ansible.builtin.file:
+    path: /root/.ssh
+    owner: root
+    group: root
+    state: directory
+    mode: '0700'
+  become: True
+
+- name: Copy key file to root
+  shell: cp /home/vagrant/scldistro /root/.ssh/id_rsa
+  become: True
+
+- name: Set permissions
+  ansible.builtin.file:
+    path: /root/.ssh/id_rsa
+    owner: root
+    group: root
+    mode: '0600'
+  become: True
+
+- name: Copy file config to root ssh
+  ansible.builtin.copy:
+    src: config
+    dest: /root/.ssh/config
+    owner: root
+    group: root
+    mode: '0600'
+  become: True

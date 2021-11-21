@@ -1,0 +1,79 @@
+- name: "Test memcached"
+  hosts: localhost
+  vars:
+    - testenv: "virtlightning"
+    - testservers:
+#       - { name: "testa",  distro: "centos8 ", memory: 1024, role: "memcache", url: "https://vagrantcloud.com/generic/boxes/centos8/versions/3.4.2/providers/virtualbox.box" }
+#       - { name: "testb",  distro: "centos8 ", memory: 1024, role: "memcache", url: "https://vagrantcloud.com/generic/boxes/centos8/versions/3.4.2/providers/virtualbox.box" }
+#       - { name: "testc",  distro: "centos8 ", memory: 1024, role: "memcache", url: "https://vagrantcloud.com/generic/boxes/centos8/versions/3.4.2/providers/virtualbox.box" }
+#       - { name: "testa",  distro: "rhel8 ", memory: 1024, role: "memcache", url: "https://vagrantcloud.com/generic/boxes/rhel8/versions/3.4.2/providers/virtualbox.box" }
+#      - { name: "testb",  distro: "rhel8 ", memory: 1024, role: "memcache", url: "https://vagrantcloud.com/generic/boxes/rhel8/versions/3.4.2/providers/virtualbox.box" }
+#       - { name: "testc",  distro: "rhel8 ", memory: 1024, role: "memcache", url: "https://vagrantcloud.com/generic/boxes/rhel8/versions/3.4.2/providers/virtualbox.box" }
+       - { name: "testa",  distro: "rhel-8.4", memory: 1024, vcpus: 2,  role: "memcache", root_disk_size: 50 }
+       - { name: "testb",  distro: "rhel-8.4", memory: 1024, vcpus: 2,  role: "memcache", root_disk_size: 50 }
+       - { name: "testc",  distro: "rhel-8.4", memory: 1024, vcpus: 2,  role: "memcache", root_disk_size: 50 }
+    - testroles:
+      - { role: "memcached", filter: "test" }
+
+  tasks:
+  - name: " build_virtual_environments | Cleanup"
+    ansible.builtin.file:
+      path: '/tmp/venv'
+      state: absent
+
+  - name: "Test memcached | build_virtual_environments | Build a virtual environment face 1 init virtual env"
+    pip:
+      name: pip
+      virtualenv: '/tmp/venv'
+      state: latest
+
+  - name: "Test memcached | build_virtual_environments | Build a virtual environment face 2 : update pip)"
+    pip:
+      name: ['virt-lightning']
+      virtualenv: '/tmp/venv'
+      state: latest
+
+  - name: "Test memcached | create a virtual environment for python "
+    ansible.builtin.template:
+      src: ansible.cfg.j2
+      dest: ansible.cfg
+    when: testenv == "virtlightning"
+
+  - name: "Test memcached | Create a disposable ansible conf"
+    ansible.builtin.template:
+      src: ansible.cfg.j2
+      dest: ansible.cfg
+    when: testenv == "virtlightning"
+
+  - name: "Test memcached | Build the virtlighning memcached test env"
+    ansible.builtin.template:
+      src: virt-lightning.yaml.j2
+      dest: virt-lightning.yaml 
+    when: testenv == "virtlightning"
+
+  - name: "Test memcached | Build the vagrant memcached test env"
+    ansible.builtin.template:
+      src: Vagrantfile.j2
+      dest: Vagrantfile 
+    when: testenv == "vagrant"
+
+  - name: "Test memcached | Build the virtlighning memcached test env"
+    ansible.builtin.template:
+      src: vl-runme.sh.j2
+      dest: runme.sh 
+    when: testenv == "virtlightning"
+
+  - name: "Test memcached | Create a test playbook"
+    ansible.builtin.template:
+      src: testplaybook.yaml.j2
+      dest:  testplaybook.yaml
+
+  - name: "Run test script"
+    shell: bash runme.sh
+    register: runme_output
+  
+  - name: "Show result"
+    debug: 
+      var: runme_output
+
+  

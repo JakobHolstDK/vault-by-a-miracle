@@ -1,0 +1,35 @@
+Vagrant.configure("2") do |config|
+
+  config.vm.define "testa" do |testa|
+    testa.vm.box = "rhel8 "
+    testa.vm.hostname = 'testa'
+    testa.vm.box_url = "https://vagrantcloud.com/generic/boxes/rhel8/versions/3.4.2/providers/virtualbox.box"
+    testa.vm.provider :virtualbox do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 1024]
+      v.customize ["modifyvm", :id, "--name", "testa"]
+    end
+  end
+
+  config.vm.define "testb" do |testb|
+    testb.vm.box = "rhel8 "
+    testb.vm.hostname = 'testb'
+    testb.vm.box_url = "https://vagrantcloud.com/generic/boxes/rhel8/versions/3.4.2/providers/virtualbox.box"
+    testb.vm.provider :virtualbox do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 1024]
+      v.customize ["modifyvm", :id, "--name", "testb"]
+    end
+  end
+
+  config.vm.define "testc" do |testc|
+    testc.vm.box = "rhel8 "
+    testc.vm.hostname = 'testc'
+    testc.vm.box_url = "https://vagrantcloud.com/generic/boxes/rhel8/versions/3.4.2/providers/virtualbox.box"
+    testc.vm.provider :virtualbox do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--memory", 1024]
+      v.customize ["modifyvm", :id, "--name", "testc"]
+    end
+  end
+end

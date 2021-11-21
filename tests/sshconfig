@@ -1,0 +1,14 @@
+#SSH config autocreated
+StrictHostKeyChecking no
+UserKnownHostsFile /dev/null
+LogLevel QUIET
+Host testb
+     Hostname 192.168.123.7
+     User jho
+Host testa
+     Hostname 192.168.123.6
+     User jho
+Host testc
+     Hostname 192.168.123.5
+     User jho
+

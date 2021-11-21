@@ -1,0 +1,38 @@
+  - name: Install openssl package
+    yum: name=openssl state=latest
+
+  - name: Install nginx package
+    yum: name=nginx state=latest
+
+  - name: Start nginx
+    service: name=nginx state=started
+
+  - name: Create ssl directory
+    file: path={{ sslpath }} state=directory mode=0777
+
+  - name: Generate Private key
+    openssl_privatekey: path={{ sslpath }}/master.key
+
+  - name: Generate CSR
+    openssl_csr: 
+      path: "{{ sslpath }}/{{ server }}-client.csr"
+      privatekey_path: "{{ sslpath }}/master.key"
+      common_name: "{{ server }}"
+      country_name: "{{ country }}"
+      email_address: "{{ contact }}"
+      organization_name: "{{ organization }}"
+    loop: "{{ servers }}"
+    loop_control:
+      loop_var: server
+
+  - name: Generate a self signed certificate
+    openssl_certificate:
+      csr_path: "{{ sslpath }}/{{ server }}-client.csr"
+      path: "{{ sslpath }}/{{ server }}-signed.crt"
+      privatekey_path: "{{ sslpath }}/master.key"
+      provider: selfsigned
+    loop: "{{ servers }}"
+    loop_control:
+      loop_var: server
+
+    

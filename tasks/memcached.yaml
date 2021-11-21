@@ -1,0 +1,61 @@
+#  vars:
+#    - memcached_port: 11211
+#    - memcached_user: "memcached"
+#    - memcached_maxconn: 8192
+#    - memcached_cachesize: 90188
+#   - memcached_listen: "0.0.0.0"
+#   - memcached_udpport: 0
+#   - memcached_threads: 8
+#   - memcached_loglevel: "-vv"
+#   - memcached_logfile: "/var/log/memcached.log"
+
+    
+  
+  tasks:
+  - name: Install memcahed package
+    yum: name=memcached state=latest
+
+  - name: Install python3 package
+    yum: name=python3 state=latest
+
+  - name: Install bottle python package
+    pip:
+      name: pymemcache
+
+  - name: Template a memcache  testscript
+    ansible.builtin.template:
+      src: memcachedtest.py.j2
+      dest: /usr/local/bin/memcachedtest.py
+      owner: root
+      group: root
+      mode: '0700'
+
+  - name: Template a memcache to /etc/sysconfig
+    ansible.builtin.template:
+      src: memcached.j2
+      dest: /etc/sysconfig/memcached
+      owner: root
+      group: root
+      mode: '0644'
+
+  - name: make sure log file exists
+    file:
+      path: /var/log/memcached.log
+      state: touch
+
+  - name: define logfile and access
+    file:
+      path: /var/log/memcached.log
+      owner: memcached
+      group: memcached
+      mode: 0644
+  
+  - name: enable memcached
+    service: name=memcached state=restarted
+
+  - name: Just force systemd to reread configs (2.4 and above)
+    ansible.builtin.systemd:
+      daemon_reload: yes
+  
+  - name: Restart memcached
+    service: name=memcached state=restarted

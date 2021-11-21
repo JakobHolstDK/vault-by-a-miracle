@@ -1,0 +1,13 @@
+---
+memcached_port: 11211
+memcached_user: "memcached"
+memcached_maxconn: 8192
+memcached_cachesize: 90188
+memcached_listen: "0.0.0.0"
+memcached_udpport: 0
+memcached_threads: 8
+memcached_loglevel: "-vv"
+memcached_logfile: "/var/log/memcached.log"
+testservera: testservera
+testserverb: testserverb
+testserverc: testserverc

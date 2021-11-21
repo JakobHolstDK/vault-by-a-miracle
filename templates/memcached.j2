@@ -1,0 +1,6 @@
+PORT="{{ memcached_port }}"
+USER="{{ memcached_user }}"
+MAXCONN="{{ memcached_maxconn }}"
+CACHESIZE="{{ memcached_cachesize }}"
+OPTIONS="-l {{ memcached_listen }} -U {{ memcached_udpport }} -t {{ memcached_threads }} {{ memcached_loglevel }} >> {{ memcached_logfile }} 2>&1"
+

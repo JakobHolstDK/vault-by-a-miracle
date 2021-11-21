@@ -1,0 +1,14 @@
+{% for var in testservers %}
+- name: {{ var.name }}
+  distro: {{ var.distro }} 
+  memory: {{ var.memory }} 
+  vcpus: {{ var.vcpus }}
+  root_disk_size: {{ var.root_disk_size }}
+  bootcmd:
+    - subscription-manager register --org={{ rhelorg }} --activationkey={{ rhelkey }}
+    - subscription-manager repos --enable codeready-builder-for-rhel-8-x86_64-rpms
+    - yum update -y
+    - systemctl enable --now cockpit.socket
+    - dnf -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+    - dnf clean all
+{% endfor %}

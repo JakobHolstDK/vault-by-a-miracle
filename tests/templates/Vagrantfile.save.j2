@@ -1,0 +1,15 @@
+Vagrant.configure("2") do |config|
+{% for var in testservers %}
+  config.vm.define "{{ var.name }}" do |{{ var.name }}|
+    {{ var.name }}.vm.box = "precise64"
+    {{ var.name }}.vm.hostname = '{{ var.name }}'
+    {{ var.name }}.vm.box_url = "{{ var.distro }}"
+#    {{ var.name }}.vm.network :private_network, ip: "192.168.56.101"
+    {{ var.name }}.vm.provider :virtualbox do |v|
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--memory", {{ var.memory }}]
+      v.customize ["modifyvm", :id, "--name", "{{ var.name }}"]
+    end
+  end
+{% endfor %}
+end

@@ -1,0 +1,18 @@
+galaxy_info:
+  author: IT infrastructure
+  description: Handle memcached
+  company: Met
+
+  license: GPLv2
+
+  min_ansible_version: 2.9
+
+  platforms:
+  - name: RedHat
+    versions:
+    - 8.4
+
+  galaxy_tags:
+  - root
+
+dependencies: []
